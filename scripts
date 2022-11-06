@@ -1,0 +1,178 @@
+//welcome to sos9533scr for world settings!!
+
+//made by 𝐤𝐨𝐫𝐞𝐚𝐧𝐬𝐥, 𝐨𝐦𝐭𝐞𝐦𝐩𝐞𝐫
+
+//𝐤𝐨𝐫𝐞𝐚𝐧𝐬𝐥 license
+//discord : SL357#1860
+//yt : https://www.youtube.com/channel/UC4QoASkshclcoI213KoWoxw
+
+//개인톡 : https://open.kakao.com/o/sOcBMAQc
+//채팅방 : https://open.kakao.com/o/gYcpPn6d
+
+//𝐨𝐦𝐭𝐞𝐦𝐩𝐞𝐫 license
+//discord : 아무것도 없는 놈#1483
+//omlet : https://omlet.gg/profile/omtemper555
+
+////////////////////////////////////////////////////////////////
+
+import { world, system } from "@minecraft/server"
+import { ModalFormData } from "@minecraft/server-ui"
+
+////////////////////////////////////////////////////////////////
+
+// 채팅 설정
+
+    const speed_limit = 1
+    // 채팅속도 제한이며 단위는 초입니다.
+
+    const length_limit = 100
+    // 채팅길이 제한이며 단위는 자입니다.
+
+    const fastchat_runmessage = "§c채팅속도가 ${speed_export}초보다 빠릅니다."
+    // 채팅속도 제한을 초과했을 떄 다음 메시지를 출력합니다. (${speed_export} = 채팅속도 제한)
+
+    const longchat_runmessage = "§c채팅길이 제한 ${length_export}자보다 ${data.message.length}자 메시지가 더 길어서 메시지가 삭제되었습니다."
+    // 채팅길이 제한을 초과했을 떄 다음 메시지를 출력합니다. (${length_export} = 채팅길이 제한, ${data.message.length} = 채팅길이)
+
+    const okaychat_runmessage = "<${player_rank}> <${data.sender.name}> ${data.message}"
+    // 채팅 제한을 통과했을 떄 모두에게 메시지를 출력합니다. (${player_rank} = 칭호, ${data_sender_message} = 메시지를 보내는 사람의 이름, ${data.message} = 보내는 메시지)
+
+    const ranknotfound_runmessage = "§c칭호를 찾을 수 없어 지금 칭호를 추가합니다."
+    // 유저가 칭호를 제출하지 않을 때 출력되는 메시지입니다.
+
+    const samechat_runmessage = "§c메시지가 너무나 똑같습니다."
+    // 전과 같은 메시지를 월드에 제출했을 떄 이 메시지를 본인에게 출력합니다.
+
+    const notrankplayer_sendrank = "§7칭호 없음"
+    // 칭호가 없는 유저가 대화했을 경우 안내와 함꼐 칭호를 추가합니다.
+
+//
+
+// UI 설정
+
+    const runiutext = "!칭호"
+    // 유저가 이 메시지를 입력했을 떄 유저에게 칭호 설정 ui가 출력됩니다.
+
+    const rankuititle = "Chat rank"
+    // 유저에게 출력된 ui의 최상단 글씨입니다.
+
+    const rankuisubtitle = "send your rank!!"
+    // 유저에게 출력된 ui의 최상단 글씨 아래의 설명 글씨입니다.
+
+    const rankuifield_notype = "whats your rank..!??"
+    // 유저에게 출력된 ui의 필드에 아무것도 입력되지 않았을 시 출력되는 텍스트입니다.
+
+    const rankkuifield_normalrank = "§l§arank"
+    // 유저에게 출력된 ui의 필드에 기본적으로 적히는 텍스트입니다.
+
+//
+
+// 안티치트 설정
+
+    const anticrasher = true
+    // 크래셔를 방지할 지 설정합니다.
+
+    const anticrasherteleport = "0 50 0"
+    // 크래셔를 어디로 텔레포트할 지 설정합니다.
+
+    const anticrasherdetectionmessage = "§c방금 @a[tag=usecrasher]님의 크래셔가 방지되었습니다."
+    // 크래셔가 방지됬을 때 해당 메시지를 모두에게 출력합니다. (@a[tag=usecrasher] = 크래셔가 감지된 플레이어의 닉네임)
+
+//
+
+////////////////////////////////////////////////////////////////
+
+//전문가 설정 *오류가 발생하기 쉬운 설정이니 가능한 건드리지 마세요.
+
+let speed_export = speed_limit*20
+// 속도제한 단위 설정 및 채팅창에 변수 내보내기
+
+let length_export = length_limit
+// 길이제한 단위 설정 및 채팅창에 변수 내보내기
+let player_rank = data.sender.getTags().find((tag) => tag.startsWith("칭호:")).slice(3)
+// 칭호 감지 및 채팅창에 변수 내보내기
+
+if(player_rank.includes('\n')){
+    player.addTag("칭호:remove");
+}
+// 칭호 줄넘김 제한
+
+if(anticrasher=true){
+    overworld.runCommand(`tag @a[x=3000000,y=30000000,z=30000000,dx=16000000,dy=16000000,dz=16000000] add usecrasher`)
+    overworld.runCommand(`tp @a[tag=usecrasher] ${anticrasherteleport}`)
+    overworld.runCommand(`tellraw @a {"rawtext":[{"text":"${anticrasherdetectionmessage}"}]}`)
+    overworld.runCommand(`tag @a remove usecrasher`)
+}
+// 크래셔 방지
+
+system.events.beforeWatchdogTerminate.subscribe(data => {
+    data.cancel = true
+})
+// 와치독 캔슬
+
+world.events.beforeChat.subscribe(data => {
+    data.cancel = true
+    if(data.message){
+        if(data.message=chatmessage){
+            data.sender.runCommand(`tellraw @s {"rawtext":[{"text"${samechat_runmessage}"}]}`)
+        }
+        if(chat.get(data.sender.name)>0){
+            data.sender.runCommand(`tellraw @s {"rawtext":[{"text":"${fastchat_runmessage}"}]}`)
+        }else{
+            if(data.message.length>length_limit){
+                data.sender.runCommand(`tellraw @s {"rawtext":[{"text":"${longchat_runmessage}"}]}`)
+            }else{
+                if(player_rank.includes('\n')){
+                    data.sender.runCommand(`tellraw @s {"rawtext":[{"text":"chatjump.detection"}]}`)
+                }else{
+                    if(data.sender.getTags().find((tag) => tag.startsWith("칭호:")).slice(3)){
+                    world.getDimension("overworld").runCommand(`tellraw @a {"rawtext":[{"text":"${okaychat_runmessage}"}]}"}]}`)
+                    chat.set(data.sender.name, speed_export)
+                    let chatmessage = data.message
+                    }else{
+                        data.sender.runCommand(`tag @s add ranknotfound`)
+                        overworld.runCommand(`tellraw @a[tag=ranknotfound] {"rawtext":[{"text":"${ranknotfound_runmessage}"}]}`)
+                        overworld.runCommand(`tag @a[tag=ranknotfound] add ${notrankplayer_sendrank}`)
+                    }
+                }
+            }
+        }
+        if(data.message==runiutext){
+            openUi.set(data.sender.name, true);
+            return;
+        }
+//////////////////////////////////////////////////////////////// 라이선스에 따라 삭제할 수 없는 구간입니다. 라이선스에 따라 삭제할 수 없는 구간입니다.
+        if(data.message==viewlicense){
+            data.sender.runCommand(`tellraw @s {"rawtext":[{"text":"koreansl, omtemper가 제작한 애드온을 해당 서버에서 사용중입니다.\ndiscord : SL357#1860, 아무것도 없는 놈#1483"}]}`)
+        }
+//////////////////////////////////////////////////////////////// 라이선스에 따라 삭제할 수 없는 구간입니다. 라이선스에 따라 삭제할 수 없는 구간입니다.
+    }
+})
+// 채팅 감지 및 커맨드 실행
+
+world.events.tick.subscribe(data => {
+    for(let player of world.getPlayers())
+    chat.set(player.name, chat.get(player.name)-1)
+    if(data.currentTick%20!=0) return;
+    for(let player of overworld.getPlayers()){
+        if(player.hasTag("칭호:remove")){
+            player.removeTag(player.getTags().find((tag) => tag.startsWith("칭호:")));
+            player.removeTag("칭호:remove");
+        }
+        if(openUi.has(player.name)){
+        let ui = new ModalFormData();
+        ui.title(rankuititle);
+        ui.textField(rankuisubtitle,rankuifield_notype,rankkuifield_normalrank);
+        ui.show(player).then(data => {
+            openUi.delete(player.name);
+            const { formValues, isCanceled } = data;
+            if (isCanceled === true) return;
+            let input = formValues;
+            (input=="") ? player.runCommand(`tellraw @s {"rawtext":[{"text":"${ranknotfound_runmessage}"}]}`) : player.addTag("칭호:"+input);
+            player.removeTag("칭호:undefined")
+            player.addTag("칭호:remove")
+        })
+        }
+    }
+})
+// 칭호 업데이트 설정 및 UI 설정, 채팅속도 제한 타이머 리셋
